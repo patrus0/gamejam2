@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 31a0b6a0e6d96f94ca4b3cf287ea3999
+guid: 0d97e44cf40f39f4b8bdeb9483bb7e94
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -49,9 +49,9 @@ TextureImporter:
     filterMode: 0
     aniso: 1
     mipBias: 0
-    wrapU: 1
-    wrapV: 1
-    wrapW: 1
+    wrapU: 0
+    wrapV: 0
+    wrapW: 0
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -109,13 +109,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Pin_stand
+      name: Wire
       rect:
         serializedVersion: 2
         x: 0
-        y: 0
-        width: 15
-        height: 47
+        y: 22
+        width: 48
+        height: 5
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,74 +124,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 8deb5e5ff75b25040800000000000000
-      internalID: 4634966527708610264
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Pin_drag
-      rect:
-        serializedVersion: 2
-        x: 17
-        y: 0
-        width: 15
-        height: 41
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 43040fb0326af8590800000000000000
-      internalID: -7669728970934304716
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Socket
-      rect:
-        serializedVersion: 2
-        x: 33
-        y: 37
-        width: 15
-        height: 11
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c84d6cee0f9918cb0800000000000000
-      internalID: -4863436862506216308
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Pin_in
-      rect:
-        serializedVersion: 2
-        x: 17
-        y: 0
-        width: 15
-        height: 33
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 94ba62ec51e5f564db39687f2e8a5920
-      internalID: -1765455845
+      spriteID: 814d09902905d31e0800000000000000
+      internalID: -2216526853440482280
       vertices: []
       indices: 
       edges: []
@@ -201,7 +135,7 @@ TextureImporter:
     physicsShape: []
     bones: []
     spriteID: 45aa8e8332f71294e90c81e61547fde3
-    internalID: 0
+    internalID: 2117266224
     vertices: []
     indices: 
     edges: []
