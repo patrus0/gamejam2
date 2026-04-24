@@ -15,15 +15,10 @@ public class Socket : MonoBehaviour
     public bool AttemptPlug(Pin pin)
     {
         if (IsOccupied) return false;
-        bool isCorrect = (pin.PinID == socketID);
-        onPinAttempt?.Invoke(pin, isCorrect);
-        if (isCorrect)
-        {
-            pin.PlugInto(this);
-            currentPin = pin;
-            return true;
-        }
-        return false;
+        pin.PlugInto(this);
+        currentPin = pin;
+        onPinAttempt?.Invoke(pin, true); // или false, если позже понадобится различать
+        return true;
     }
 
     public void UnplugPin(Pin pin)
