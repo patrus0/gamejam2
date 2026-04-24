@@ -1,10 +1,19 @@
 fileFormatVersion: 2
-guid: 2b34216fe9c43b044ac6a05039da199f
+guid: 31a0b6a0e6d96f94ca4b3cf287ea3999
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3870290526110238747
-    second: PLUG_0
+      213: 4634966527708610264
+    second: Pin_allt_0
+  - first:
+      213: -7669728970934304716
+    second: Pin_allt_1
+  - first:
+      213: -4863436862506216308
+    second: Pin_allt_2
+  - first:
+      213: -2216526853440482280
+    second: Pin_allt_3
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +55,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -100,23 +109,89 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: PLUG_0
+      name: Pin_allt_0
       rect:
         serializedVersion: 2
-        x: 16
+        x: 0
         y: 0
-        width: 16
-        height: 48
+        width: 15
+        height: 47
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 5e7b3ada547f94ac0800000000000000
-      internalID: -3870290526110238747
+      spriteID: 8deb5e5ff75b25040800000000000000
+      internalID: 4634966527708610264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pin_allt_1
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 0
+        width: 15
+        height: 41
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 43040fb0326af8590800000000000000
+      internalID: -7669728970934304716
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pin_allt_2
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 37
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c84d6cee0f9918cb0800000000000000
+      internalID: -4863436862506216308
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pin_allt_3
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 0
+        width: 5
+        height: 35
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 814d09902905d31e0800000000000000
+      internalID: -2216526853440482280
       vertices: []
       indices: 
       edges: []
@@ -125,7 +200,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 45aa8e8332f71294e90c81e61547fde3
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +210,10 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      PLUG_0: -3870290526110238747
+      Pin_allt_0: 4634966527708610264
+      Pin_allt_1: -7669728970934304716
+      Pin_allt_2: -4863436862506216308
+      Pin_allt_3: -2216526853440482280
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
