@@ -683,10 +683,10 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 1
   windowsGamepadBackendHint: 0
-  cloudProjectId: 
+  cloudProjectId: bb38bc59-6cbb-4abe-8029-feb8d6af20ad
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: 
+  projectName: gamejam2
   organizationId: 
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
