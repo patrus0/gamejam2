@@ -566,6 +566,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pin
       objectReference: {fileID: 0}
+    - target: {fileID: 8513032972102430747, guid: 72e4bb2a72939ff4db6052f71e97def1, type: 3}
+      propertyPath: pinID
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
