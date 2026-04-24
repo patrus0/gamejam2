@@ -109,7 +109,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Pin_allt_0
+      name: Pin_stand
       rect:
         serializedVersion: 2
         x: 0
@@ -131,7 +131,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Pin_allt_1
+      name: Pin_drag
       rect:
         serializedVersion: 2
         x: 17
@@ -153,7 +153,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Pin_allt_2
+      name: Socket
       rect:
         serializedVersion: 2
         x: 33
@@ -175,7 +175,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Pin_allt_3
+      name: Wire
       rect:
         serializedVersion: 2
         x: 38
@@ -196,6 +196,28 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Pin_in
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 0
+        width: 15
+        height: 33
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94ba62ec51e5f564db39687f2e8a5920
+      internalID: -1765455845
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -210,10 +232,11 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Pin_allt_0: 4634966527708610264
-      Pin_allt_1: -7669728970934304716
-      Pin_allt_2: -4863436862506216308
-      Pin_allt_3: -2216526853440482280
+      Pin_drag: -7669728970934304716
+      Pin_in: -1765455845
+      Pin_stand: 4634966527708610264
+      Socket: -4863436862506216308
+      Wire: -2216526853440482280
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
