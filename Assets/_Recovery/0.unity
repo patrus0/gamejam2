@@ -2418,7 +2418,7 @@ GameObject:
   - component: {fileID: 1220036348}
   - component: {fileID: 1220036351}
   - component: {fileID: 1220036350}
-  - component: {fileID: 1220036352}
+  - component: {fileID: 1220036349}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -2446,6 +2446,31 @@ RectTransform:
   m_AnchoredPosition: {x: -233, y: 61}
   m_SizeDelta: {x: -608.0009, y: -362.9071}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1220036349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1220036347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 367393b7fba837140986282203ebfcbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InterceptedMessageUI
+  popupRoot: {fileID: 1220036348}
+  messageText: {fileID: 1444186637}
+  hiddenAnchoredPosition: {x: -820, y: 0}
+  shownAnchoredPosition: {x: -420, y: 0}
+  slideDuration: 0.35
+  startHidden: 1
+  animateOnlyFirstTime: 1
+  fallbackMessage: Signal intercepted, but message is unreadable.
+  autoStart: 1
+  firstMessageDelay: 1
+  messageInterval: 5
+  avoidImmediateRepeat: 1
+  messageFile: {fileID: 4900000, guid: 68ee7c14567ddbe4d84c052fcbe66a9d, type: 3}
 --- !u!114 &1220036350
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2484,27 +2509,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1220036347}
   m_CullTransparentMesh: 1
---- !u!114 &1220036352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1220036347}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f8cc7921b5dd48e4ca7a846ad3c945ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InterceptedMessageUI
-  messageText: {fileID: 1444186637}
-  fallbackMessage: Signal intercepted, but message is unreadable.
-  autoStart: 1
-  clearTextOnStart: 1
-  firstMessageDelay: 5
-  messageInterval: 10
-  messageLifetime: 5
-  avoidImmediateRepeat: 1
-  messageFile: {fileID: 4900000, guid: 68ee7c14567ddbe4d84c052fcbe66a9d, type: 3}
 --- !u!1 &1247727877
 GameObject:
   m_ObjectHideFlags: 0
