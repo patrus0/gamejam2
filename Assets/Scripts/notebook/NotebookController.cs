@@ -5,6 +5,13 @@ using UnityEngine.UI;
 
 public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
+    [System.Serializable]
+    public class NotebookPage
+    {
+        [TextArea(3, 10)]
+        public string[] texts;
+    }
+
     [Header("Настройки движения")]
     public RectTransform panel;
     public Vector2 hiddenPos;
@@ -12,10 +19,8 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
     public float speed = 10f;
 
     [Header("Текст и Страницы")]
-    public TextMeshProUGUI noteText;
-    [TextArea(3, 10)]
-    public string[] pages;
-    public float typingSpeed = 0.03f;
+    public TextMeshProUGUI[] noteTexts;
+    public NotebookPage[] pages;
 
     [Header("Кнопки навигации")]
     public Button nextButton; // Перетащи сюда правую кнопку
@@ -24,13 +29,12 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
     private int currentPage = 0;
     private Vector2 targetPos;
     private bool isFullyOpen = false;
-    private Coroutine typingCoroutine;
 
     void Start()
     {
         targetPos = hiddenPos;
         panel.anchoredPosition = hiddenPos;
-        noteText.text = "";
+        SetTextForAll(string.Empty);
 
         // Скрываем кнопки изначально
         UpdateButtons();
@@ -49,6 +53,11 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void NextPage()
     {
+        if (pages == null || pages.Length == 0)
+        {
+            return;
+        }
+
         if (currentPage < pages.Length - 1)
         {
             currentPage++;
@@ -58,6 +67,11 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void PrevPage()
     {
+        if (pages == null || pages.Length == 0)
+        {
+            return;
+        }
+
         if (currentPage > 0)
         {
             currentPage--;
@@ -67,27 +81,74 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     void ShowPage(int index)
     {
+        if (pages == null || pages.Length == 0)
+        {
+            SetTextForAll(string.Empty);
+            UpdateButtons();
+            return;
+        }
+
+        index = Mathf.Clamp(index, 0, pages.Length - 1);
+        currentPage = index;
         UpdateButtons();
-        if (typingCoroutine != null) StopCoroutine(typingCoroutine);
-        typingCoroutine = StartCoroutine(TypeText(pages[index]));
+        SetTextForPage(pages[index]);
     }
 
     void UpdateButtons()
     {
+        bool hasPages = pages != null && pages.Length > 0;
+
         // Кнопка НАЗАД активна, если мы не на первой странице
-        backButton.gameObject.SetActive(currentPage > 0 && isFullyOpen);
+        backButton.gameObject.SetActive(hasPages && currentPage > 0 && isFullyOpen);
 
         // Кнопка ВПЕРЕД активна, если есть куда листать
-        nextButton.gameObject.SetActive(currentPage < pages.Length - 1 && isFullyOpen);
+        nextButton.gameObject.SetActive(hasPages && currentPage < pages.Length - 1 && isFullyOpen);
     }
 
-    System.Collections.IEnumerator TypeText(string content)
+    void SetTextForAll(string content)
     {
-        noteText.text = "";
-        foreach (char letter in content.ToCharArray())
+        if (noteTexts == null || noteTexts.Length == 0)
         {
-            noteText.text += letter;
-            yield return new WaitForSeconds(typingSpeed);
+            return;
+        }
+
+        for (int i = 0; i < noteTexts.Length; i++)
+        {
+            if (noteTexts[i] != null)
+            {
+                noteTexts[i].text = content;
+            }
+        }
+    }
+
+    void SetTextForPage(NotebookPage page)
+    {
+        if (page == null || page.texts == null)
+        {
+            SetTextForAll(string.Empty);
+            return;
+        }
+
+        if (noteTexts == null || noteTexts.Length == 0)
+        {
+            return;
+        }
+
+        for (int i = 0; i < noteTexts.Length; i++)
+        {
+            if (noteTexts[i] == null)
+            {
+                continue;
+            }
+
+            if (i < page.texts.Length)
+            {
+                noteTexts[i].text = page.texts[i];
+            }
+            else
+            {
+                noteTexts[i].text = string.Empty;
+            }
         }
     }
 
@@ -100,8 +161,7 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
     {
         targetPos = hiddenPos;
         isFullyOpen = false;
-        if (typingCoroutine != null) StopCoroutine(typingCoroutine);
-        noteText.text = "";
+        SetTextForAll(string.Empty);
         UpdateButtons(); // Скроет кнопки, когда блокнот уезжает
     }
 }
