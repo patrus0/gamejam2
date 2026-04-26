@@ -32,6 +32,11 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
     public Button nextButton; // Перетащи сюда правую кнопку
     public Button backButton; // Перетащи сюда левую кнопку
 
+    [Header("Звук")]
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioClip pageFlipClip;
+    [SerializeField] private AudioClip notebookOpenClip;
+
     private int currentPage = 0;
     private Vector2 targetPos;
     private bool isFullyOpen = false;
@@ -109,6 +114,7 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
         {
             currentPage++;
             ShowPage(currentPage);
+            PlayPageFlipSound();
         }
     }
 
@@ -123,7 +129,32 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
         {
             currentPage--;
             ShowPage(currentPage);
+            PlayPageFlipSound();
         }
+    }
+
+    void PlayPageFlipSound()
+    {
+        if (pageFlipClip == null)
+            return;
+
+        if (sfxSource == null)
+            sfxSource = GetComponent<AudioSource>();
+
+        if (sfxSource != null)
+            sfxSource.PlayOneShot(pageFlipClip);
+    }
+
+    void PlayNotebookOpenSound()
+    {
+        if (notebookOpenClip == null)
+            return;
+
+        if (sfxSource == null)
+            sfxSource = GetComponent<AudioSource>();
+
+        if (sfxSource != null)
+            sfxSource.PlayOneShot(notebookOpenClip);
     }
 
     void ShowPage(int index)
@@ -201,7 +232,11 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        bool wasHidden = targetPos != visiblePos;
         targetPos = visiblePos;
+
+        if (wasHidden)
+            PlayNotebookOpenSound();
     }
 
     public void OnPointerExit(PointerEventData eventData)

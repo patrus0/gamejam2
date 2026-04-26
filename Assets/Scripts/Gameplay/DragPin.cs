@@ -15,6 +15,11 @@ public class DragPin : MonoBehaviour
     [SerializeField] private Transform socketTransform; // позиция гнезда
     [SerializeField] private UnityEvent onPlugged;     // событие при вставке (на будущее)
 
+    [Header("Звук")]
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioClip plugClip;
+    [SerializeField] private AudioClip unplugClip;
+
     private SpriteRenderer spriteRenderer;
     private bool isDragging = false;
     private bool isPlugged = false;   // вставлен ли в гнездо
@@ -64,6 +69,7 @@ public class DragPin : MonoBehaviour
             isPlugged = true;
             transform.position = socketTransform.position;
             spriteRenderer.sprite = draggedSprite; // оставляем изменённый спрайт
+            PlaySfx(plugClip);
 
             // Вызываем событие для будущих действий (например, зажечь лампочку)
             onPlugged?.Invoke();
@@ -96,5 +102,18 @@ public class DragPin : MonoBehaviour
         spriteRenderer.sprite = normalSprite;
         // Можно немного отодвинуть от гнезда, чтобы не залипал
         transform.position = startPosition;
+        PlaySfx(unplugClip);
+    }
+
+    private void PlaySfx(AudioClip clip)
+    {
+        if (clip == null)
+            return;
+
+        if (sfxSource == null)
+            sfxSource = GetComponent<AudioSource>();
+
+        if (sfxSource != null)
+            sfxSource.PlayOneShot(clip);
     }
 }

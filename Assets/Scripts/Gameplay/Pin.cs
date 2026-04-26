@@ -15,6 +15,11 @@ public class Pin : MonoBehaviour
     [SerializeField] private Sprite draggedSprite;
     [SerializeField] private Sprite pluggedSprite;
 
+    [Header("Звук")]
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioClip plugClip;
+    [SerializeField] private AudioClip unplugClip;
+
     private SpriteRenderer sr;
     private Lamp myLamp; // Ссылка на связанную лампу
     private bool isDragging = false;
@@ -92,6 +97,7 @@ public class Pin : MonoBehaviour
         
         transform.position = socket.transform.position + new Vector3(0, 0, -0.1f);
         sr.sprite = pluggedSprite;
+        PlaySfx(plugClip);
 
         // СОСТОЯНИЕ: Проверка сокета лампой (Зеленый или Красный)
         if (myLamp != null) myLamp.NotifyPlugged(socket.SocketID);
@@ -106,6 +112,19 @@ public class Pin : MonoBehaviour
         isPlugged = false;
         currentSocket = null;
         sr.sprite = normalSprite;
+        PlaySfx(unplugClip);
+    }
+
+    private void PlaySfx(AudioClip clip)
+    {
+        if (clip == null)
+            return;
+
+        if (sfxSource == null)
+            sfxSource = GetComponent<AudioSource>();
+
+        if (sfxSource != null)
+            sfxSource.PlayOneShot(clip);
     }
 
     private void OnTriggerEnter2D(Collider2D other)

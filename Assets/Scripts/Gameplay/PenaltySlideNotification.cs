@@ -11,6 +11,10 @@ public class PenaltySlideNotification : MonoBehaviour
     [SerializeField] private float slideDuration = 0.25f;
     [SerializeField] private float visibleDuration = 1f;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource sfxSource;
+    [SerializeField] private AudioClip penaltyAppearClip;
+
     private Coroutine playRoutine;
 
     private void Awake()
@@ -33,10 +37,24 @@ public class PenaltySlideNotification : MonoBehaviour
 
     private void HandlePenalty(string _)
     {
+        PlayPenaltyAppearSound();
+
         if (playRoutine != null)
             StopCoroutine(playRoutine);
 
         playRoutine = StartCoroutine(PlayNotificationRoutine());
+    }
+
+    private void PlayPenaltyAppearSound()
+    {
+        if (penaltyAppearClip == null)
+            return;
+
+        if (sfxSource == null)
+            sfxSource = GetComponent<AudioSource>();
+
+        if (sfxSource != null)
+            sfxSource.PlayOneShot(penaltyAppearClip);
     }
 
     private IEnumerator PlayNotificationRoutine()

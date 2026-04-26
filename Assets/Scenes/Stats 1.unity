@@ -320,12 +320,14 @@ MonoBehaviour:
   penaltyCountText: {fileID: 1893033771}
   resultImage: {fileID: 366873344}
   resultText: {fileID: 1790956821}
-  maxAllowedPenalties: 3
+  maxAllowedPenalties: 5
   passSprite: {fileID: 21300000, guid: b66fba8179a6c674bbedaca7be727bd0, type: 3}
   failSprite: {fileID: 21300000, guid: 811f7f18d2c139d4fb968cfd76bf5cbc, type: 3}
   passResultText: "\u0425\u043E\u0440\u043E\u0448\u0430\u044F \u0440\u0430\u0431\u043E\u0442\u0430!\u041F\u0430\u0440\u0442\u0438\u044F
     \u0433\u043E\u0440\u0434\u0438\u0442\u0441\u044F \u0442\u043E\u0431\u043E\u0439"
-  failResultText: "\u0415\u0431\u0430\u0442\u044C \u0442\u044B \u0442\u0443\u043F\u043E\u0439"
+  failResultText: "\u041F\u043E\u043B\u043D\u044B\u0439 \u043F\u0440\u043E\u0432\u0430\u043B!
+    \u0412\u0430\u0441 \u043E\u0442\u043F\u0440\u0430\u0432\u0438\u043B\u0438 \u043D\u0430
+    \u0440\u0430\u0441\u0442\u0440\u0435\u043B"
 --- !u!1 &366158860
 GameObject:
   m_ObjectHideFlags: 0
@@ -407,8 +409,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 150}
-  m_SizeDelta: {x: 425, y: 75}
+  m_AnchoredPosition: {x: 0, y: 108.40668}
+  m_SizeDelta: {x: 425, y: 158.1866}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &366873344
 MonoBehaviour:
