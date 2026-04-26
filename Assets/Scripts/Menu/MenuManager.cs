@@ -22,4 +22,13 @@ public class MenuManager : MonoBehaviour
     {
         Application.Quit(); 
     }
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip musicForThisScene;
+    [SerializeField] private float musicFadeDuration = 1.0f;
+
+    void Start()
+    {
+        AudioManager.Instance.PlayMusic(musicForThisScene, musicFadeDuration);
+    }
 }

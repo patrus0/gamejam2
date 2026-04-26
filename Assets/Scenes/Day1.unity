@@ -4873,6 +4873,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2061629790}
   - component: {fileID: 2061629789}
+  - component: {fileID: 2061629791}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -4954,6 +4955,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1602535063}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2061629791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2061629788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fe50cc5e456ac64f94cd768ee765cb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelMusicPlayer
+  musicForThisScene: {fileID: 8300000, guid: 820fbd584657a9d48b17120686435c61, type: 3}
+  musicFadeDuration: 1
 --- !u!1001 &2074566350
 PrefabInstance:
   m_ObjectHideFlags: 0
