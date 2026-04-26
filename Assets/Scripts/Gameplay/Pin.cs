@@ -1,126 +1,119 @@
 using UnityEngine;
-using UnityEngine.Events;
 
-[RequireComponent(typeof(SpriteRenderer), typeof(Collider2D), typeof(Rigidbody2D))]
+[RequireComponent(typeof(SpriteRenderer), typeof(Collider2D))]
 public class Pin : MonoBehaviour
 {
     [Header("Идентификация")]
     [SerializeField] private string pinID;
 
-    [Header("Возврат на резинке")]
-    [SerializeField] private float returnSpeed = 5f;
+    [Header("Настройки движения")]
+    [SerializeField] private float returnSpeed = 25f;
     private Vector2 startPosition;
 
-    [Header("Спрайты")]
+    [Header("Спрайты штыря")]
     [SerializeField] private Sprite normalSprite;
     [SerializeField] private Sprite draggedSprite;
     [SerializeField] private Sprite pluggedSprite;
 
-    [Header("События")]
-    [SerializeField] private UnityEvent<Pin, Socket> onPluggedCorrect;
-    [SerializeField] private UnityEvent<Pin, Socket> onWrongAttempt;
-
-    private SpriteRenderer spriteRenderer;
+    private SpriteRenderer sr;
+    private Lamp myLamp; // Ссылка на связанную лампу
     private bool isDragging = false;
     private bool isPlugged = false;
-    private Socket currentSocket = null;
     private Socket hoverSocket = null;
+    private Socket currentSocket = null;
 
     public string PinID => pinID;
 
     private void Start()
     {
         startPosition = transform.position;
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.sprite = normalSprite;
+        sr = GetComponent<SpriteRenderer>();
+        sr.sprite = normalSprite;
+
+        // Автоматический поиск своей лампы по ID
+        Lamp[] allLamps = FindObjectsByType<Lamp>(FindObjectsSortMode.None);
+        foreach (Lamp l in allLamps)
+        {
+            if (l.LinkedPinID == pinID) { myLamp = l; break; }
+        }
     }
 
     private void Update()
     {
-        // Возврат к начальной позиции (резинка)
+        // Механика возврата на место (резинка)
         if (!isDragging && !isPlugged)
         {
             transform.position = Vector2.MoveTowards(transform.position, startPosition, returnSpeed * Time.deltaTime);
         }
-        // Перетаскивание мышкой
+
+        // Следование за мышью
         if (isDragging)
         {
-            transform.position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            transform.position = new Vector3(mousePos.x, mousePos.y, -1f);
+            //transform.position = (Vector2)Camera.main.ScreenToWorldPoint(Input.mousePosition);
         }
     }
 
     private void OnMouseDown()
     {
-        if (isPlugged)
-        {
-            // Выдёргиваем из гнезда и сразу начинаем тащить
-            Unplug();
-            isDragging = true;
-            spriteRenderer.sprite = draggedSprite;
-        }
-        else
-        {
-            isDragging = true;
-            spriteRenderer.sprite = draggedSprite;
-        }
+
+        if (isPlugged) Unplug();
+
+        isDragging = true;
+        sr.sprite = draggedSprite;
+
+        // СОСТОЯНИЕ: Лампа замирает (горит желтым)
+        if (myLamp != null) myLamp.NotifyPickedUp();
     }
 
     private void OnMouseUp()
     {
         if (!isDragging) return;
+        isDragging = false;
 
         if (hoverSocket != null && !hoverSocket.IsOccupied)
         {
-            if (hoverSocket.AttemptPlug(this))
-            {
-                // Вставка успешна – всё обработается в PlugInto
-                isDragging = false;
-            }
-            else
-            {
-                onWrongAttempt?.Invoke(this, hoverSocket);
-                isDragging = false;
-                spriteRenderer.sprite = normalSprite;
-            }
+            PlugInto(hoverSocket);
         }
         else
         {
-            isDragging = false;
-            spriteRenderer.sprite = normalSprite;
+            sr.sprite = normalSprite;
+            // СОСТОЯНИЕ: Пин брошен, лампа продолжает мигать и считать время
+            if (myLamp != null) myLamp.NotifyDropped();
         }
     }
 
-    public void PlugInto(Socket socket)
+    private void PlugInto(Socket socket)
     {
         isPlugged = true;
         currentSocket = socket;
-        Vector3 targetPos = (socket.PlugPosition != null ? socket.PlugPosition.position : socket.transform.position) + new Vector3(0, 0, -0.1f);
-        transform.position = targetPos;
-        spriteRenderer.sprite = pluggedSprite;
-        isDragging = false;
-        onPluggedCorrect?.Invoke(this, socket);
+        currentSocket.SetOccupied(true);
+        
+        transform.position = socket.transform.position + new Vector3(0, 0, -0.1f);
+        sr.sprite = pluggedSprite;
+
+        // СОСТОЯНИЕ: Проверка сокета лампой (Зеленый или Красный)
+        if (myLamp != null) myLamp.NotifyPlugged(socket.SocketID);
     }
 
     public void Unplug()
     {
         if (!isPlugged) return;
-        if (currentSocket != null) currentSocket.UnplugPin(this);
+        
+        if (currentSocket != null) currentSocket.SetOccupied(false);
         isPlugged = false;
         currentSocket = null;
-        spriteRenderer.sprite = normalSprite;
-        // Позиция не сбрасывается – штырь сам начнёт возвращаться к startPosition через Update
+        sr.sprite = normalSprite;
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        Socket socket = other.GetComponent<Socket>();
-        if (socket != null && !socket.IsOccupied)
-            hoverSocket = socket;
+        if (other.TryGetComponent(out Socket s)) hoverSocket = s;
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (hoverSocket != null && other.GetComponent<Socket>() == hoverSocket)
-            hoverSocket = null;
+        if (hoverSocket != null && other.gameObject == hoverSocket.gameObject) hoverSocket = null;
     }
 }
