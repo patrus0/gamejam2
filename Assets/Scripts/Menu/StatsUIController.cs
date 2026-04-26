@@ -8,11 +8,14 @@ public class StatsUIController : MonoBehaviour
     [Header("UI Элементы")]
     [SerializeField] private TextMeshProUGUI penaltyCountText; // Ссылка на текст штрафов
     [SerializeField] private Image resultImage;              // Ссылка на картинку (Прошел/Нет)
+    [SerializeField] private TextMeshProUGUI resultText;     // Ссылка на текст результата (Победа/Поражение)
 
     [Header("Настройки результата")]
     [SerializeField] private int maxAllowedPenalties = 3;    // Лимит штрафов
     [SerializeField] private Sprite passSprite;              // Картинка "ПРОШЕЛ"
     [SerializeField] private Sprite failSprite;              // Картинка "ПРОВАЛ"
+    [SerializeField] private string passResultText = "Победа";
+    [SerializeField] private string failResultText = "Поражение";
 
     private void Start()
     {
@@ -26,11 +29,19 @@ public class StatsUIController : MonoBehaviour
         // Проверяем результат
         if (total <= maxAllowedPenalties)
         {
-            resultImage.sprite = passSprite;
+            if (resultImage != null)
+                resultImage.sprite = passSprite;
+
+            if (resultText != null)
+                resultText.text = passResultText;
         }
         else
         {
-            resultImage.sprite = failSprite;
+            if (resultImage != null)
+                resultImage.sprite = failSprite;
+
+            if (resultText != null)
+                resultText.text = failResultText;
         }
     }
 
