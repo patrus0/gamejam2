@@ -3995,7 +3995,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0315bbba3ee9b704c81b8dab8a0d4ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DayTimer
-  dayDuration: 360
+  dayDuration: 361
   statsSceneName: Stats 1
   timerText: {fileID: 0}
 --- !u!4 &1567764589
@@ -5977,7 +5977,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9df46e58ee2fac45961f952c11d6dca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TestCaller
-  someLamp: {fileID: 1888569267}
 --- !u!1001 &2074566350
 PrefabInstance:
   m_ObjectHideFlags: 0
