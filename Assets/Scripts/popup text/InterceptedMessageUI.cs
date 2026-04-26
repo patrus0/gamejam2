@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -25,6 +26,11 @@ public class InterceptedMessageUI : MonoBehaviour
     private Coroutine clearTextRoutine;
     private readonly List<string> loadedMessages = new List<string>();
     private int lastMessageIndex = -1;
+    private string currentMessage = string.Empty;
+
+    public event Action<string> MessageShown;
+    public event Action MessageCleared;
+    public string CurrentMessage => currentMessage;
 
     private void Awake()
     {
@@ -36,7 +42,9 @@ public class InterceptedMessageUI : MonoBehaviour
         }
 
         if (clearTextOnStart)
-            messageText.text = string.Empty;
+            ClearCurrentMessage(emitEvent: false);
+        else
+            currentMessage = messageText.text ?? string.Empty;
 
         ReloadMessagesFromFile();
     }
@@ -111,14 +119,16 @@ public class InterceptedMessageUI : MonoBehaviour
         }
 
         if (messageText != null)
-            messageText.text = string.Empty;
+            ClearCurrentMessage();
     }
 
     public void ShowMessage(string message)
     {
         if (messageText == null) return;
 
-        messageText.text = string.IsNullOrWhiteSpace(message) ? fallbackMessage : message;
+        currentMessage = string.IsNullOrWhiteSpace(message) ? fallbackMessage : message;
+        messageText.text = currentMessage;
+        MessageShown?.Invoke(currentMessage);
 
         if (clearTextRoutine != null)
         {
@@ -137,7 +147,7 @@ public class InterceptedMessageUI : MonoBehaviour
         if (loadedMessages.Count == 0)
             return fallbackMessage;
 
-        int selectedIndex = Random.Range(0, loadedMessages.Count);
+        int selectedIndex = UnityEngine.Random.Range(0, loadedMessages.Count);
         if (avoidImmediateRepeat && loadedMessages.Count > 1 && selectedIndex == lastMessageIndex)
         {
             selectedIndex = (selectedIndex + 1) % loadedMessages.Count;
@@ -165,8 +175,16 @@ public class InterceptedMessageUI : MonoBehaviour
     private IEnumerator ClearTextAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+        ClearCurrentMessage();
+        clearTextRoutine = null;
+    }
+
+    private void ClearCurrentMessage(bool emitEvent = true)
+    {
+        currentMessage = string.Empty;
         if (messageText != null)
             messageText.text = string.Empty;
-        clearTextRoutine = null;
+        if (emitEvent)
+            MessageCleared?.Invoke();
     }
 }
