@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
 public struct CustomerData
@@ -8,8 +9,24 @@ public struct CustomerData
     public string targetSocket; // Какой сокет ему нужен
 }
 
+public struct CallData
+{
+    public string fullName;
+    public string targetSocket;
+    public string pinID;
+
+    public CallData(string fullName, string targetSocket, string pinID)
+    {
+        this.fullName = fullName;
+        this.targetSocket = targetSocket;
+        this.pinID = pinID;
+    }
+}
+
 public class CallManager : MonoBehaviour
 {
+    public static event Action<CallData> CallStarted;
+
     [Header("База данных")]
     [SerializeField] private List<CustomerData> customers;
     
@@ -20,9 +37,11 @@ public class CallManager : MonoBehaviour
     [Header("Текущий активный вызов (Для отладки)")]
     public string currentCustomerName;
     public string currentRequiredSocket;
+    public string currentRequiredPin;
 
     private List<Lamp> allLamps = new List<Lamp>();
     private float nextCallTime;
+    public IReadOnlyList<CustomerData> Customers => customers;
 
     private void Start()
     {
@@ -42,7 +61,7 @@ public class CallManager : MonoBehaviour
 
     void SetNextCallTime()
     {
-        nextCallTime = Time.time + Random.Range(minInterval, maxInterval);
+        nextCallTime = Time.time + UnityEngine.Random.Range(minInterval, maxInterval);
     }
 
     void TryMakeCall()
@@ -53,18 +72,20 @@ public class CallManager : MonoBehaviour
         if (freeLamps.Count > 0 && customers.Count > 0)
         {
             // Выбираем случайную свободную лампу
-            Lamp selectedLamp = freeLamps[Random.Range(0, freeLamps.Count)];
+            Lamp selectedLamp = freeLamps[UnityEngine.Random.Range(0, freeLamps.Count)];
             // Выбираем случайного клиента
-            CustomerData data = customers[Random.Range(0, customers.Count)];
+            CustomerData data = customers[UnityEngine.Random.Range(0, customers.Count)];
 
             // Обновляем публичные поля для вывода
             currentCustomerName = data.fullName;
             currentRequiredSocket = data.targetSocket;
+            currentRequiredPin = selectedLamp.LinkedPinID;
 
             Debug.Log($"<color=yellow>[ЗВОНОК]</color> Клиент: {data.fullName} просит сокет {data.targetSocket} на линии {selectedLamp.LinkedPinID}");
 
             // Запускаем звонок
             selectedLamp.StartIncomingCall(data.targetSocket);
+            CallStarted?.Invoke(new CallData(data.fullName, data.targetSocket, selectedLamp.LinkedPinID));
         }
     }
 }

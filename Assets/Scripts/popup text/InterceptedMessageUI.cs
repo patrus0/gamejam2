@@ -11,6 +11,7 @@ public class InterceptedMessageUI : MonoBehaviour
 
     [Header("Behavior")]
     [SerializeField] private string fallbackMessage = "Signal intercepted, but message is unreadable.";
+    [SerializeField] private string callFormat = "{0}\nSocket: {1}\nPin: {2}";
     [SerializeField] private bool autoStart = true;
     [SerializeField] private bool clearTextOnStart = true;
     [SerializeField, Min(0f)] private float firstMessageDelay = 1f;
@@ -27,10 +28,16 @@ public class InterceptedMessageUI : MonoBehaviour
     private readonly List<string> loadedMessages = new List<string>();
     private int lastMessageIndex = -1;
     private string currentMessage = string.Empty;
+    private string currentName = string.Empty;
+    private string currentSocket = string.Empty;
+    private string currentPin = string.Empty;
 
     public event Action<string> MessageShown;
     public event Action MessageCleared;
     public string CurrentMessage => currentMessage;
+    public string CurrentName => currentName;
+    public string CurrentSocket => currentSocket;
+    public string CurrentPin => currentPin;
 
     private void Awake()
     {
@@ -126,6 +133,9 @@ public class InterceptedMessageUI : MonoBehaviour
     {
         if (messageText == null) return;
 
+        currentName = string.Empty;
+        currentSocket = string.Empty;
+        currentPin = string.Empty;
         currentMessage = string.IsNullOrWhiteSpace(message) ? fallbackMessage : message;
         messageText.text = currentMessage;
         MessageShown?.Invoke(currentMessage);
@@ -182,9 +192,26 @@ public class InterceptedMessageUI : MonoBehaviour
     private void ClearCurrentMessage(bool emitEvent = true)
     {
         currentMessage = string.Empty;
+        currentName = string.Empty;
+        currentSocket = string.Empty;
+        currentPin = string.Empty;
         if (messageText != null)
             messageText.text = string.Empty;
         if (emitEvent)
             MessageCleared?.Invoke();
+    }
+
+    public void ShowCall(string fullName, string socketID, string pinID)
+    {
+        currentName = fullName ?? string.Empty;
+        currentSocket = socketID ?? string.Empty;
+        currentPin = pinID ?? string.Empty;
+        string formatted = string.Format(
+            callFormat,
+            string.IsNullOrWhiteSpace(currentName) ? "Unknown" : currentName,
+            string.IsNullOrWhiteSpace(currentSocket) ? "-" : currentSocket,
+            string.IsNullOrWhiteSpace(currentPin) ? "-" : currentPin
+        );
+        ShowMessage(formatted);
     }
 }

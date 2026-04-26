@@ -102,6 +102,7 @@ public class Pin : MonoBehaviour
         if (!isPlugged) return;
         
         if (currentSocket != null) currentSocket.SetOccupied(false);
+        if (myLamp != null) myLamp.NotifyDropped();
         isPlugged = false;
         currentSocket = null;
         sr.sprite = normalSprite;

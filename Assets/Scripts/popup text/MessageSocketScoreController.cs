@@ -16,6 +16,7 @@ public class MessageSocketScoreController : MonoBehaviour
     [SerializeField] private TMP_Text debugExpectedPinText;
 
     [Header("Scoring")]
+    [SerializeField] private bool enableLegacyScore = false;
     [SerializeField] private int pointsForCorrect = 1;
     [SerializeField] private int pointsForWrong = 1;
     [SerializeField] private int pointsForTimeout = 1;
@@ -64,6 +65,7 @@ public class MessageSocketScoreController : MonoBehaviour
         }
 
         Socket.PinPlugged += HandlePinPlugged;
+        Lamp.CallFailedForPin += HandleLampFailure;
     }
 
     private void OnDisable()
@@ -77,6 +79,7 @@ public class MessageSocketScoreController : MonoBehaviour
         }
 
         Socket.PinPlugged -= HandlePinPlugged;
+        Lamp.CallFailedForPin -= HandleLampFailure;
     }
 
     public void ReloadNameMap()
@@ -155,7 +158,7 @@ public class MessageSocketScoreController : MonoBehaviour
         {
             suppressNextClearPenalty = false;
         }
-        else if (subtractPointsOnTimeout && hadActiveTask)
+        else if (enableLegacyScore && subtractPointsOnTimeout && hadActiveTask)
         {
             score -= pointsForTimeout;
             RefreshScoreText();
@@ -193,17 +196,46 @@ public class MessageSocketScoreController : MonoBehaviour
 
         bool socketMatches = pluggedSocket == expectedSocketForActiveName;
         bool isCorrect = socketMatches;
-        if (isCorrect)
-            score += pointsForCorrect;
-        else
-            score -= pointsForWrong;
+        if (enableLegacyScore)
+        {
+            if (isCorrect)
+                score += pointsForCorrect;
+            else
+                score -= pointsForWrong;
 
-        RefreshScoreText();
+            RefreshScoreText();
+        }
 
         if (clearBlockAfterEvaluatedAnswer && messageUI != null)
         {
             suppressNextClearPenalty = true;
             messageUI.HidePanel(true);
+        }
+    }
+
+    private void HandleLampFailure(string failedPinID)
+    {
+        if (string.IsNullOrWhiteSpace(activeName))
+            return;
+        if (string.IsNullOrWhiteSpace(expectedPinForActiveName))
+            return;
+
+        string normalizedFailedPin = NormalizeName(failedPinID);
+        if (normalizedFailedPin != expectedPinForActiveName)
+            return;
+
+        // Штраф уже начислен лампой. Здесь просто завершаем и очищаем этот блок.
+        if (messageUI != null)
+        {
+            suppressNextClearPenalty = true;
+            messageUI.HidePanel(true);
+        }
+        else
+        {
+            activeName = string.Empty;
+            expectedSocketForActiveName = string.Empty;
+            expectedPinForActiveName = string.Empty;
+            RefreshDebugTargetsText();
         }
     }
 

@@ -2,6 +2,7 @@
 using UnityEngine.EventSystems;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -22,6 +23,11 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
     public TextMeshProUGUI[] noteTexts;
     public NotebookPage[] pages;
 
+    [Header("Источник данных")]
+    [SerializeField] private bool useCallManagerCustomers = true;
+    [SerializeField] private CallManager callManager;
+    [SerializeField] private string notebookLineFormat = "{0} -> {1}";
+
     [Header("Кнопки навигации")]
     public Button nextButton; // Перетащи сюда правую кнопку
     public Button backButton; // Перетащи сюда левую кнопку
@@ -32,12 +38,53 @@ public class NotebookController : MonoBehaviour, IPointerEnterHandler, IPointerE
 
     void Start()
     {
+        if (useCallManagerCustomers)
+            RebuildPagesFromCallManager();
+
         targetPos = hiddenPos;
         panel.anchoredPosition = hiddenPos;
         SetTextForAll(string.Empty);
 
         // Скрываем кнопки изначально
         UpdateButtons();
+    }
+
+    public void RebuildPagesFromCallManager()
+    {
+        if (callManager == null)
+            callManager = FindFirstObjectByType<CallManager>();
+        if (callManager == null || callManager.Customers == null)
+            return;
+
+        int linesPerPage = Mathf.Max(1, noteTexts != null && noteTexts.Length > 0 ? noteTexts.Length : 1);
+        List<string> lines = new List<string>();
+
+        for (int i = 0; i < callManager.Customers.Count; i++)
+        {
+            CustomerData customer = callManager.Customers[i];
+            string fullName = string.IsNullOrWhiteSpace(customer.fullName) ? "Unknown" : customer.fullName;
+            string socket = string.IsNullOrWhiteSpace(customer.targetSocket) ? "-" : customer.targetSocket;
+            lines.Add(string.Format(notebookLineFormat, fullName, socket));
+        }
+
+        int pageCount = Mathf.Max(1, Mathf.CeilToInt(lines.Count / (float)linesPerPage));
+        NotebookPage[] generated = new NotebookPage[pageCount];
+
+        int lineIndex = 0;
+        for (int pageIndex = 0; pageIndex < pageCount; pageIndex++)
+        {
+            var page = new NotebookPage();
+            page.texts = new string[linesPerPage];
+            for (int lineInPage = 0; lineInPage < linesPerPage; lineInPage++)
+            {
+                page.texts[lineInPage] = lineIndex < lines.Count ? lines[lineIndex] : string.Empty;
+                lineIndex++;
+            }
+            generated[pageIndex] = page;
+        }
+
+        pages = generated;
+        currentPage = 0;
     }
 
     void Update()
