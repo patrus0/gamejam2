@@ -1920,7 +1920,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 130, y: -105.07}
+  m_AnchoredPosition: {x: 257.6, y: -240.59}
   m_SizeDelta: {x: 53.4795, y: 45.5238}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1009338368
@@ -2443,8 +2443,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -233, y: 61}
-  m_SizeDelta: {x: -608.0009, y: -362.9071}
+  m_AnchoredPosition: {x: -390, y: 140}
+  m_SizeDelta: {x: -1444.7057, y: -850.0028}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1220036350
 MonoBehaviour:
@@ -4128,8 +4128,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -264.6, y: -327.8}
-  m_SizeDelta: {x: 320.0435, y: 255.6676}
+  m_AnchoredPosition: {x: -436.69, y: -750.5226}
+  m_SizeDelta: {x: 568.67, y: 526.7128}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1787341949
 MonoBehaviour:
@@ -4579,7 +4579,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -130, y: -99.9}
+  m_AnchoredPosition: {x: -257.6, y: -240.59}
   m_SizeDelta: {x: 53.4795, y: 45.5238}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1933643323
@@ -4873,7 +4873,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2061629790}
   - component: {fileID: 2061629789}
-  - component: {fileID: 2061629791}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -4955,20 +4954,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1602535063}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2061629791
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2061629788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3fe50cc5e456ac64f94cd768ee765cb2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LevelMusicPlayer
-  musicForThisScene: {fileID: 8300000, guid: 820fbd584657a9d48b17120686435c61, type: 3}
-  musicFadeDuration: 1
 --- !u!1001 &2074566350
 PrefabInstance:
   m_ObjectHideFlags: 0
