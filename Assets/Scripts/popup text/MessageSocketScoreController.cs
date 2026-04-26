@@ -5,27 +5,38 @@ using UnityEngine;
 
 public class MessageSocketScoreController : MonoBehaviour
 {
+    private static readonly List<MessageSocketScoreController> ActiveControllers = new List<MessageSocketScoreController>();
+
     [Header("References")]
     [SerializeField] private InterceptedMessageUI messageUI;
     [Tooltip("Формат строк: Фамилия Имя = a5")]
     [SerializeField] private TextAsset nameToSocketMapFile;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private TMP_Text debugExpectedSocketText;
+    [SerializeField] private TMP_Text debugExpectedPinText;
 
     [Header("Scoring")]
     [SerializeField] private int pointsForCorrect = 1;
     [SerializeField] private int pointsForWrong = 1;
+    [SerializeField] private int pointsForTimeout = 1;
     [SerializeField] private bool requireActiveMessage = true;
-    [SerializeField] private bool consumeMessageAfterAttempt = true;
+    [SerializeField] private bool clearBlockAfterEvaluatedAnswer = true;
+    [SerializeField] private bool subtractPointsOnTimeout = true;
+    [SerializeField] private bool requireMatchingPin = true;
+    [SerializeField] private bool enforceUniquePinsAcrossBlocks = true;
 
     [Header("Parsing")]
     [SerializeField] private bool caseInsensitiveNames = true;
     [SerializeField] private bool logWarnings = true;
+    [Tooltip("Если пусто, список пинов будет взят автоматически из объектов Pin в сцене.")]
+    [SerializeField] private List<string> allowedPinIDs = new List<string>();
 
     private readonly Dictionary<string, string> expectedSocketByName = new Dictionary<string, string>();
 
     private string activeName = string.Empty;
     private string expectedSocketForActiveName = string.Empty;
+    private string expectedPinForActiveName = string.Empty;
+    private bool suppressNextClearPenalty;
     private int score;
 
     public int Score => score;
@@ -35,13 +46,17 @@ public class MessageSocketScoreController : MonoBehaviour
         if (messageUI == null)
             messageUI = FindFirstObjectByType<InterceptedMessageUI>();
 
+        EnsureAllowedPinsLoaded();
         ReloadNameMap();
         RefreshScoreText();
-        RefreshExpectedSocketDebugText();
+        RefreshDebugTargetsText();
     }
 
     private void OnEnable()
     {
+        if (!ActiveControllers.Contains(this))
+            ActiveControllers.Add(this);
+
         if (messageUI != null)
         {
             messageUI.MessageShown += HandleMessageShown;
@@ -53,6 +68,8 @@ public class MessageSocketScoreController : MonoBehaviour
 
     private void OnDisable()
     {
+        ActiveControllers.Remove(this);
+
         if (messageUI != null)
         {
             messageUI.MessageShown -= HandleMessageShown;
@@ -73,11 +90,19 @@ public class MessageSocketScoreController : MonoBehaviour
             return;
         }
 
+        if (LooksLikeCodeFile(nameToSocketMapFile.text))
+        {
+            if (logWarnings)
+                Debug.LogWarning("MessageSocketScoreController: nameToSocketMapFile looks like a C# file. Assign a plain text mapping file (e.g. name_to_socket_map.txt).", this);
+            return;
+        }
+
+        int parsedCount = 0;
         string[] lines = nameToSocketMapFile.text.Split(new[] { "\r\n", "\n", "\r" }, System.StringSplitOptions.None);
         for (int i = 0; i < lines.Length; i++)
         {
             string line = lines[i].Trim();
-            if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#") || line.StartsWith("//"))
+            if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#") || line.StartsWith("//") || IsLikelyCodeLine(line))
                 continue;
 
             if (!TryParseMappingLine(line, out string parsedName, out string parsedSocket))
@@ -93,6 +118,12 @@ public class MessageSocketScoreController : MonoBehaviour
                 continue;
 
             expectedSocketByName[key] = normalizedSocket;
+            parsedCount++;
+        }
+
+        if (parsedCount == 0 && logWarnings)
+        {
+            Debug.LogWarning("MessageSocketScoreController: no valid mappings were parsed. Check nameToSocketMapFile format: 'Фамилия Имя = a5'.", this);
         }
     }
 
@@ -110,19 +141,35 @@ public class MessageSocketScoreController : MonoBehaviour
                 Debug.LogWarning($"MessageSocketScoreController: no coordinate mapping for '{shownMessage}'.", this);
         }
 
-        RefreshExpectedSocketDebugText();
+        AssignRandomPinForActiveName();
+        RefreshDebugTargetsText();
     }
 
     private void HandleMessageCleared()
     {
+        bool hadActiveTask = !string.IsNullOrWhiteSpace(activeName)
+            || !string.IsNullOrWhiteSpace(expectedSocketForActiveName)
+            || !string.IsNullOrWhiteSpace(expectedPinForActiveName);
+
+        if (suppressNextClearPenalty)
+        {
+            suppressNextClearPenalty = false;
+        }
+        else if (subtractPointsOnTimeout && hadActiveTask)
+        {
+            score -= pointsForTimeout;
+            RefreshScoreText();
+        }
+
         activeName = string.Empty;
         expectedSocketForActiveName = string.Empty;
-        RefreshExpectedSocketDebugText();
+        expectedPinForActiveName = string.Empty;
+        RefreshDebugTargetsText();
     }
 
     private void HandlePinPlugged(Pin pin, Socket socket)
     {
-        if (socket == null)
+        if (pin == null || socket == null)
             return;
 
         if (requireActiveMessage && string.IsNullOrWhiteSpace(activeName))
@@ -135,7 +182,17 @@ public class MessageSocketScoreController : MonoBehaviour
         if (string.IsNullOrWhiteSpace(pluggedSocket))
             return;
 
-        bool isCorrect = pluggedSocket == expectedSocketForActiveName;
+        string normalizedPinID = NormalizeName(pin.PinID);
+        bool pinMatches = !requireMatchingPin
+            || string.IsNullOrWhiteSpace(expectedPinForActiveName)
+            || normalizedPinID == expectedPinForActiveName;
+
+        // Если это "чужой" пин, текущий блок попытку игнорирует и не штрафует.
+        if (!pinMatches)
+            return;
+
+        bool socketMatches = pluggedSocket == expectedSocketForActiveName;
+        bool isCorrect = socketMatches;
         if (isCorrect)
             score += pointsForCorrect;
         else
@@ -143,8 +200,11 @@ public class MessageSocketScoreController : MonoBehaviour
 
         RefreshScoreText();
 
-        if (consumeMessageAfterAttempt && messageUI != null)
+        if (clearBlockAfterEvaluatedAnswer && messageUI != null)
+        {
+            suppressNextClearPenalty = true;
             messageUI.HidePanel(true);
+        }
     }
 
     private void RefreshScoreText()
@@ -153,18 +213,28 @@ public class MessageSocketScoreController : MonoBehaviour
             scoreText.text = $"Score: {score}";
     }
 
-    private void RefreshExpectedSocketDebugText()
+    private void RefreshDebugTargetsText()
     {
         if (debugExpectedSocketText == null)
-            return;
-
-        if (string.IsNullOrWhiteSpace(activeName) || string.IsNullOrWhiteSpace(expectedSocketForActiveName))
+        {
+            // do nothing
+        }
+        else if (string.IsNullOrWhiteSpace(activeName) || string.IsNullOrWhiteSpace(expectedSocketForActiveName))
         {
             debugExpectedSocketText.text = string.Empty;
-            return;
+        }
+        else
+        {
+            debugExpectedSocketText.text = $"Target socket: {expectedSocketForActiveName}";
         }
 
-        debugExpectedSocketText.text = $"Target: {expectedSocketForActiveName}";
+        if (debugExpectedPinText == null)
+            return;
+
+        if (string.IsNullOrWhiteSpace(activeName) || string.IsNullOrWhiteSpace(expectedPinForActiveName))
+            debugExpectedPinText.text = string.Empty;
+        else
+            debugExpectedPinText.text = $"Target pin: {expectedPinForActiveName}";
     }
 
     private bool TryParseMappingLine(string line, out string name, out string socketCoordinate)
@@ -197,7 +267,10 @@ public class MessageSocketScoreController : MonoBehaviour
 
         for (int i = 0; i < trimmed.Length; i++)
         {
-            char c = trimmed[i];
+            char c = NormalizeConfusableLetter(trimmed[i]);
+            if (c == 'ё') c = 'е';
+            if (c == 'Ё') c = 'Е';
+
             bool isWs = char.IsWhiteSpace(c);
             if (isWs)
             {
@@ -207,7 +280,13 @@ public class MessageSocketScoreController : MonoBehaviour
             }
             else
             {
-                sb.Append(c);
+                // Оставляем только буквы/цифры и дефис в составе имени.
+                if (char.IsLetterOrDigit(c) || c == '-')
+                {
+                    sb.Append(c);
+                    previousWasWhitespace = false;
+                }
+                // Любые другие символы (скрытые, пунктуация, форматирование) игнорируем.
                 previousWasWhitespace = false;
             }
         }
@@ -216,6 +295,38 @@ public class MessageSocketScoreController : MonoBehaviour
         if (caseInsensitiveNames)
             normalized = normalized.ToLowerInvariant();
         return normalized;
+    }
+
+    private char NormalizeConfusableLetter(char c)
+    {
+        // Латиница -> кириллица для визуально одинаковых символов.
+        switch (c)
+        {
+            case 'A': return 'А';
+            case 'a': return 'а';
+            case 'B': return 'В';
+            case 'E': return 'Е';
+            case 'e': return 'е';
+            case 'K': return 'К';
+            case 'k': return 'к';
+            case 'M': return 'М';
+            case 'm': return 'м';
+            case 'H': return 'Н';
+            case 'h': return 'н';
+            case 'O': return 'О';
+            case 'o': return 'о';
+            case 'P': return 'Р';
+            case 'p': return 'р';
+            case 'C': return 'С';
+            case 'c': return 'с';
+            case 'T': return 'Т';
+            case 't': return 'т';
+            case 'X': return 'Х';
+            case 'x': return 'х';
+            case 'Y': return 'У';
+            case 'y': return 'у';
+            default: return c;
+        }
     }
 
     private string NormalizeCoordinate(string raw)
@@ -274,5 +385,110 @@ public class MessageSocketScoreController : MonoBehaviour
         }
 
         return true;
+    }
+
+    private void EnsureAllowedPinsLoaded()
+    {
+        if (allowedPinIDs.Count > 0)
+            return;
+
+        Pin[] pins = FindObjectsByType<Pin>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        var uniquePins = new HashSet<string>();
+        for (int i = 0; i < pins.Length; i++)
+        {
+            string normalized = NormalizeName(pins[i].PinID);
+            if (string.IsNullOrWhiteSpace(normalized))
+                continue;
+            if (uniquePins.Add(normalized))
+                allowedPinIDs.Add(normalized);
+        }
+
+        if (allowedPinIDs.Count == 0 && logWarnings)
+            Debug.LogWarning("MessageSocketScoreController: no pin IDs found for random assignment.", this);
+    }
+
+    private void AssignRandomPinForActiveName()
+    {
+        expectedPinForActiveName = string.Empty;
+
+        if (!requireMatchingPin)
+            return;
+
+        EnsureAllowedPinsLoaded();
+        if (allowedPinIDs.Count == 0)
+            return;
+
+        List<string> candidatePins = BuildAvailablePinPool();
+        if (candidatePins.Count == 0)
+            return;
+
+        int randomIndex = UnityEngine.Random.Range(0, candidatePins.Count);
+        expectedPinForActiveName = candidatePins[randomIndex];
+    }
+
+    private List<string> BuildAvailablePinPool()
+    {
+        if (!enforceUniquePinsAcrossBlocks)
+            return new List<string>(allowedPinIDs);
+
+        var reservedPins = new HashSet<string>();
+        for (int i = 0; i < ActiveControllers.Count; i++)
+        {
+            MessageSocketScoreController controller = ActiveControllers[i];
+            if (controller == null || controller == this)
+                continue;
+            if (!controller.isActiveAndEnabled)
+                continue;
+            if (!controller.requireMatchingPin)
+                continue;
+            if (string.IsNullOrWhiteSpace(controller.activeName))
+                continue;
+            if (string.IsNullOrWhiteSpace(controller.expectedPinForActiveName))
+                continue;
+
+            reservedPins.Add(controller.expectedPinForActiveName);
+        }
+
+        var available = new List<string>(allowedPinIDs.Count);
+        for (int i = 0; i < allowedPinIDs.Count; i++)
+        {
+            string candidate = allowedPinIDs[i];
+            if (!reservedPins.Contains(candidate))
+                available.Add(candidate);
+        }
+
+        // Если пинов меньше, чем блоков, разрешаем повторно использовать, чтобы блок не завис.
+        if (available.Count == 0)
+            available.AddRange(allowedPinIDs);
+
+        return available;
+    }
+
+    private bool IsLikelyCodeLine(string line)
+    {
+        if (line == "{" || line == "}" || line == ";" || line == "};")
+            return true;
+
+        string lower = line.ToLowerInvariant();
+        return lower.StartsWith("using ")
+            || lower.StartsWith("namespace ")
+            || lower.StartsWith("class ")
+            || lower.StartsWith("public ")
+            || lower.StartsWith("private ")
+            || lower.StartsWith("protected ")
+            || lower.StartsWith("internal ")
+            || lower.Contains("=>")
+            || lower.Contains("monobehaviour");
+    }
+
+    private bool LooksLikeCodeFile(string content)
+    {
+        if (string.IsNullOrWhiteSpace(content))
+            return false;
+
+        string lower = content.ToLowerInvariant();
+        return lower.Contains("using unityengine")
+            || lower.Contains("class messagesocketscorecontroller")
+            || lower.Contains("monobehaviour");
     }
 }
