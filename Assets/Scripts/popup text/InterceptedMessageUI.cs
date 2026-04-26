@@ -11,7 +11,7 @@ public class InterceptedMessageUI : MonoBehaviour
 
     [Header("Behavior")]
     [SerializeField] private string fallbackMessage = "Signal intercepted, but message is unreadable.";
-    [SerializeField] private string callFormat = "{0}\nSocket: {1}\nPin: {2}";
+    [SerializeField] private string callFormat = "{0} порт:{1}";
     [SerializeField] private bool autoStart = true;
     [SerializeField] private bool clearTextOnStart = true;
     [SerializeField, Min(0f)] private float firstMessageDelay = 1f;

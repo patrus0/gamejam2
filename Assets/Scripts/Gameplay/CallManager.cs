@@ -41,6 +41,7 @@ public class CallManager : MonoBehaviour
 
     private List<Lamp> allLamps = new List<Lamp>();
     private float nextCallTime;
+    private string lastCustomerName = string.Empty;
     public IReadOnlyList<CustomerData> Customers => customers;
 
     private void Start()
@@ -74,7 +75,9 @@ public class CallManager : MonoBehaviour
             // Выбираем случайную свободную лампу
             Lamp selectedLamp = freeLamps[UnityEngine.Random.Range(0, freeLamps.Count)];
             // Выбираем случайного клиента
-            CustomerData data = customers[UnityEngine.Random.Range(0, customers.Count)];
+            int customerIndex = GetNextCustomerIndex();
+            CustomerData data = customers[customerIndex];
+            lastCustomerName = data.fullName ?? string.Empty;
 
             // Обновляем публичные поля для вывода
             currentCustomerName = data.fullName;
@@ -87,5 +90,27 @@ public class CallManager : MonoBehaviour
             selectedLamp.StartIncomingCall(data.targetSocket);
             CallStarted?.Invoke(new CallData(data.fullName, data.targetSocket, selectedLamp.LinkedPinID));
         }
+    }
+
+    private int GetNextCustomerIndex()
+    {
+        if (customers.Count <= 1)
+            return 0;
+
+        int guard = 0;
+        int index = UnityEngine.Random.Range(0, customers.Count);
+
+        while (guard < 20 && string.Equals(customers[index].fullName, lastCustomerName, StringComparison.Ordinal))
+        {
+            index = UnityEngine.Random.Range(0, customers.Count);
+            guard++;
+        }
+
+        if (string.Equals(customers[index].fullName, lastCustomerName, StringComparison.Ordinal))
+        {
+            index = (index + 1) % customers.Count;
+        }
+
+        return index;
     }
 }
