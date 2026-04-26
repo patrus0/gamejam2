@@ -206,7 +206,7 @@ GameObject:
   m_Component:
   - component: {fileID: 13455229}
   m_Layer: 0
-  m_Name: Komutator (1)
+  m_Name: Komutator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -802,8 +802,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4287616766
+  m_fontColor: {r: 0.9960785, g: 0.83921576, b: 0.56078434, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -820,13 +820,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 42
+  m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -2128,7 +2128,7 @@ GameObject:
   - component: {fileID: 415605127}
   - component: {fileID: 415605126}
   m_Layer: 0
-  m_Name: EventSystem (1)
+  m_Name: EventSystem
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2230,7 +2230,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 100, y: 450}
+  m_AnchoredPosition: {x: 100, y: 500}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &419334796
@@ -2277,7 +2277,7 @@ MonoBehaviour:
   m_fontColor32:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColor: {r: 0.99607843, g: 0.8392157, b: 0.56078434, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -2294,13 +2294,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 42
+  m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -2929,8 +2929,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -448.36896, y: 46}
-  m_SizeDelta: {x: -1171.4436, y: -932.6704}
+  m_AnchoredPosition: {x: -442, y: 251.5}
+  m_SizeDelta: {x: -1116, y: -977}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &596352298
 MonoBehaviour:
@@ -2946,7 +2946,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InterceptedMessageUI
   messageText: {fileID: 976273640}
   fallbackMessage: Signal intercepted, but message is unreadable.
-  callFormat: '{0} порт:{1}'
+  callFormat: "{0} \u043F\u043E\u0440\u0442:{2}"
   autoStart: 0
   clearTextOnStart: 1
   firstMessageDelay: 5
@@ -3308,8 +3308,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -448.36896, y: -129}
-  m_SizeDelta: {x: -1171.4436, y: -932.6704}
+  m_AnchoredPosition: {x: -442, y: 91.5}
+  m_SizeDelta: {x: -1116, y: -977}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &718352674
 MonoBehaviour:
@@ -3325,7 +3325,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InterceptedMessageUI
   messageText: {fileID: 157677615}
   fallbackMessage: Signal intercepted, but message is unreadable.
-  callFormat: '{0} порт:{1}'
+  callFormat: "{0} \u043F\u043E\u0440\u0442:{2}"
   autoStart: 0
   clearTextOnStart: 1
   firstMessageDelay: 5
@@ -3841,8 +3841,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4287616766
+  m_fontColor: {r: 0.9960785, g: 0.83921576, b: 0.56078434, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -3859,13 +3859,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 42
+  m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -4763,8 +4763,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -448.36896, y: 216}
-  m_SizeDelta: {x: -1171.4436, y: -932.6704}
+  m_AnchoredPosition: {x: -442, y: 411.5}
+  m_SizeDelta: {x: -1116, y: -977}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1220036350
 MonoBehaviour:
@@ -4818,7 +4818,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InterceptedMessageUI
   messageText: {fileID: 1444186637}
   fallbackMessage: Signal intercepted, but message is unreadable.
-  callFormat: '{0} порт:{1}'
+  callFormat: "{0} \u043F\u043E\u0440\u0442:{2}"
   autoStart: 0
   clearTextOnStart: 1
   firstMessageDelay: 5
@@ -5465,8 +5465,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4287616766
+  m_fontColor: {r: 0.9960785, g: 0.83921576, b: 0.56078434, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -5483,13 +5483,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 42
+  m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
   m_textAlignment: 65535
@@ -7291,7 +7291,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2075504288}
   m_Layer: 0
-  m_Name: "\u0421ordBlock (1)"
+  m_Name: "\u0421ordBlock"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7345,8 +7345,8 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 328566456}
-  - {fileID: 470781809}
-  - {fileID: 415605128}
-  - {fileID: 13455229}
-  - {fileID: 1604229551}
   - {fileID: 2075504288}
+  - {fileID: 13455229}
+  - {fileID: 470781809}
+  - {fileID: 1604229551}
+  - {fileID: 415605128}
